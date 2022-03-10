@@ -4,7 +4,7 @@ import http from "http"
 import * as SocketClusterServer from "socketcluster-server"
 import { v4 } from "uuid"
 
-import { SocketServerOptions } from "../types/SocketServerOptions"
+import { SocketServerOptions } from "../Types/SocketServerOptions"
 
 class SocketClusterServerInstance {
     private _httpServer?: http.Server;
