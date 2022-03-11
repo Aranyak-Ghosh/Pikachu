@@ -1,6 +1,6 @@
 class ClientNotInitializedError extends Error {
-    constructor(){
-        super("Client not initialized")
+    constructor(ClientType: string){
+        super(ClientType + " Client not initialized")
         this.name = "ClientNotInitializedError"
     }
 }
