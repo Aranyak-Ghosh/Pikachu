@@ -8,3 +8,5 @@ abstract class ILogger {
     public abstract Warn(message: string, ...args: any[]): void
     public abstract Error(message: string, ...args: any[]): void
 }
+
+export { ILogger }
