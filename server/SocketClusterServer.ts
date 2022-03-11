@@ -4,11 +4,14 @@ import http from "http"
 import * as SocketClusterServer from "socketcluster-server"
 import { v4 } from "uuid"
 
-import { SocketServerOptions } from "../Types/SocketServerOptions"
+import { SocketServerOptions } from "../types/SocketServerOptions"
+import {ILogger} from "../utils/logger/ILogger"
 
 class SocketClusterServerInstance {
     private _httpServer?: http.Server;
     private _scServer?: SocketClusterServer.AGServer;
+
+    private _logger: ILogger;
 
     private _instanceId: string;
 
@@ -24,9 +27,10 @@ class SocketClusterServerInstance {
     private readonly AUTHENTICATED = "authenticated";
 
 
-    constructor(serverOptions: SocketServerOptions) {
+    constructor(serverOptions: SocketServerOptions, logger: ILogger) {
         this._serverOptions = serverOptions;
         this._instanceId = v4().toString();
+        this._logger = logger;
         this.initialize();
     }
 
@@ -38,6 +42,8 @@ class SocketClusterServerInstance {
 
 
     private initialize(): void {
+        this._logger.Info("Initializing Socket Cluster Server")
+
         if (this._httpServer == undefined) {
             this._httpServer = http.createServer();
         }
@@ -54,12 +60,13 @@ class SocketClusterServerInstance {
             });
         }
 
+        this._logger.Info("Registering Event Handlers")
         //Register Listeners
 
         //Start Server
         // Setup HTTP server to listen on given port
-        console.log("Server initialized on port - ", this._serverOptions.port);
         this._httpServer.listen(this._serverOptions.port);
+        this._logger.Info("Server initialized on port - ", this._serverOptions.port);
     }
 
     
