@@ -8,7 +8,9 @@ abstract class ILogger {
     public abstract Warn(message: string, ...args: any[]): void
     public abstract Error(message: string, ...args: any[]): void
 
-    public static GetInstance():ILogger{
+    public abstract Error(ex: Error): void
+
+    public static GetInstance(): ILogger {
         throw new Error("ILogger is an abstract class and can not be initialized")
         return;
     }
