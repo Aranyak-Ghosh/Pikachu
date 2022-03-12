@@ -7,13 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "@ava/typescript": "^2.0.0",
     "@types/node": "*",
+    "@types/socketcluster-server": "^15.0.4",
+    "@types/uuid": "^8.3.3",
+    "ava": "^4.1.0",
     "nodemon": "^2.0.15",
     "socketcluster": "^16.0.2",
     "ts-node": "^10.4.0",
-    "typescript": "^4.5.4",
-    "@types/socketcluster-server": "^15.0.4",
-    "@types/uuid": "^8.3.3"
+    "typescript": "^4.5.4"
   },
   "dependencies": {
     "@types/ioredis": "^4.28.8",
