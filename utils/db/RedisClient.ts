@@ -1,10 +1,10 @@
 import RedisModule from "ioredis";
+import ConsoleLogger from "../logger/ConsoleLogger";
 
 import { ClientNotInitializedError } from "../../types/Errors";
 import { ILogger } from "../logger/ILogger";
 
 class RedisClient {
-
     private _client: RedisModule.Redis;
     private static _instance?: RedisClient;
     private static readonly CLIENT_TYPE: string = "Redis";
@@ -15,7 +15,7 @@ class RedisClient {
     public static Initialize(options?: RedisModule.RedisOptions): RedisClient {
         RedisClient._instance = new RedisClient();
 
-        RedisClient._instance._logger = ILogger.GetInstance();
+        RedisClient._instance._logger = ConsoleLogger.GetInstance();
 
         RedisClient._instance.TTL = 86400;
 
@@ -42,8 +42,7 @@ class RedisClient {
             var data = Buffer.from(JSON.stringify(message));
             await this._client.publishBuffer(channel, data);
         } catch (ex) {
-            const err = ex as Error;
-            this._logger.Error(err);
+            this._logger.Error("Unable to publish message to redis", ex);
             throw ex;
         }
     }
@@ -60,9 +59,23 @@ class RedisClient {
 
             await this._client.set(key, data, "ex", ttl);
         } catch (ex) {
-            const err = ex as Error;
-            this._logger.Error(err);
+            this._logger.Error("Unable to write to redis", ex);
             throw ex;
+        }
+    }
+
+    public async GetValueForKey(
+        key: RedisModule.KeyType
+    ): Promise<string | null> {
+        this._logger.Info("Fetching key {0}", key);
+        let data = await this._client.get(key);
+
+        return data;
+    }
+
+    public Disconnect() {
+        if (this._client != undefined && this._client != null) {
+            this._client.disconnect();
         }
     }
 }
