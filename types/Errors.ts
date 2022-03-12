@@ -13,4 +13,4 @@ class RedisPublishError extends Error {
     }
 }
 
-export {ClientNotInitializedError}
+export {ClientNotInitializedError, RedisPublishError}
