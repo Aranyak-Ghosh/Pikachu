@@ -1,10 +1,26 @@
 {
   "name": "pikachu",
   "version": "1.0.0",
+  "type": "module",
   "description": "SockerClusterServer",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
+  },
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=ts-node/esm",
+      "--trace-warnings"
+    ],
+    "require": [
+      "./types/Errors.ts",
+      "./utils/logger/ILogger.ts",
+      "./utils/db/RedisClient.ts",
+      "esm"
+    ]
   },
   "devDependencies": {
     "@ava/typescript": "^2.0.0",
@@ -12,6 +28,7 @@
     "@types/socketcluster-server": "^15.0.4",
     "@types/uuid": "^8.3.3",
     "ava": "^4.1.0",
+    "esm": "^3.2.25",
     "nodemon": "^2.0.15",
     "socketcluster": "^16.0.2",
     "ts-node": "^10.4.0",
