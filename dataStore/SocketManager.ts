@@ -1,11 +1,12 @@
 "use strict";
 
-import { UserSocket } from "../Types/SocketConnection";
+import { AGServerSocket } from "socketcluster-server";
+import { ClientNotInitializedError } from "../types/Errors";
 
 class SocketManager {
     //Collection of sockets mapped to userId
-    private _sockets: Record<string, UserSocket>;
-
+    private _sockets: Record<string, AGServerSocket>;
+    private static readonly CLIENT_TYPE : string = "SocketManager"
     private static _instance?: SocketManager;
 
     private constructor() {}
@@ -21,7 +22,12 @@ class SocketManager {
     }
 
     public static GetInstance(): SocketManager | undefined {
-        return SocketManager._instance;
+        if (
+            SocketManager._instance != null &&
+            SocketManager._instance != undefined
+        ) {
+            return SocketManager._instance;
+        } else throw new ClientNotInitializedError(SocketManager.CLIENT_TYPE);
     }
 
     public static DeleteInstance(): void {
@@ -29,11 +35,11 @@ class SocketManager {
             delete SocketManager._instance;
     }
 
-    public RegisterSocket(userId: string, socket: UserSocket) {
+    public RegisterSocket(userId: string, socket: AGServerSocket) {
         this._sockets[userId] = socket;
     }
 
-    public GetSocketForUser(userId: string): UserSocket | null {
+    public GetSocketForUser(userId: string): AGServerSocket | null {
         return this._sockets[userId];
     }
 
