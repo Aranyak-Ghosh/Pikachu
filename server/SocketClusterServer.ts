@@ -1,11 +1,11 @@
-'use strict'
+"use strict";
 
-import http from "http"
-import * as SocketClusterServer from "socketcluster-server"
-import { v4 } from "uuid"
+import http from "http";
+import * as SocketClusterServer from "socketcluster-server";
+import { v4 } from "uuid";
 
-import { SocketServerOptions } from "../types/SocketServerOptions"
-import { ILogger } from "../utils/logger/interface/ILogger"
+import { SocketServerOptions } from "../types/SocketServerOptions";
+import { ILogger } from "../utils/logger/interface/ILogger";
 
 class SocketClusterServerInstance {
     private _httpServer?: http.Server;
@@ -18,14 +18,13 @@ class SocketClusterServerInstance {
     private _serverOptions: SocketServerOptions;
 
     private readonly CONNECT_EVENT = "connection";
-    private readonly CONNECT_FAIL = 'connectionAbort'
+    private readonly CONNECT_FAIL = "connectionAbort";
     private readonly DISCONNECT_EVENT = "disconnect";
     private readonly ERROR_EVENT = "error";
     private readonly WARNING_EVENT = "warning";
     private readonly READY_EVENT = "ready";
     private readonly BAD_TOKEN = "badSocketAuthToken";
     private readonly AUTHENTICATED = "authenticated";
-
 
     constructor(serverOptions: SocketServerOptions, logger: ILogger) {
         this._serverOptions = serverOptions;
@@ -38,11 +37,8 @@ class SocketClusterServerInstance {
         return this._instanceId;
     }
 
-
-
-
     private initialize(): void {
-        this._logger.Info("Initializing Socket Cluster Server")
+        this._logger.Info("Initializing Socket Cluster Server");
 
         if (this._httpServer == undefined) {
             this._httpServer = http.createServer();
@@ -56,21 +52,21 @@ class SocketClusterServerInstance {
                 handshakeTimeout: this._serverOptions.handshakeTimeout,
                 pingTimeout: this._serverOptions.pingTimeout,
                 ackTimeout: this._serverOptions.ackTimeout,
-                pingInterval: this._serverOptions.pingInterval
+                pingInterval: this._serverOptions.pingInterval,
             });
         }
 
-        this._logger.Info("Registering Event Handlers")
+        this._logger.Info("Registering Event Handlers");
         //Register Listeners
 
         //Start Server
         // Setup HTTP server to listen on given port
         this._httpServer.listen(this._serverOptions.port);
-        this._logger.Info("Server initialized on port - ", this._serverOptions.port);
+        this._logger.Info(
+            "Server initialized on port - ",
+            this._serverOptions.port
+        );
     }
-
-
-
 }
 
-export default SocketClusterServerInstance
+export default SocketClusterServerInstance;

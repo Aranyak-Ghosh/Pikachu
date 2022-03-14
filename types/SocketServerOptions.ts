@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 interface WSEngineOptions {
     maxPayload: number;
-  }
-  
-  interface SocketServerOptions {
+}
+
+interface SocketServerOptions {
     /**
      * The port to listen on.
      * @default 8000
@@ -56,7 +56,6 @@ interface WSEngineOptions {
      * @default 8080
      */
     serverPort: number;
-  }
-  
-  export { WSEngineOptions, SocketServerOptions };
-  
+}
+
+export { WSEngineOptions, SocketServerOptions };

@@ -1,10 +1,10 @@
 import { RedisClient } from "../RedisClient";
 
-let client: RedisClient
+let client: RedisClient;
 
 beforeAll(() => {
     client = RedisClient.Initialize();
-})
+});
 
 afterAll((done) => {
     RedisClient.DeInitialize();
@@ -12,21 +12,17 @@ afterAll((done) => {
 });
 
 describe("RedisClientTests", () => {
-
     //////////////////////////////// Pub-Sub Tests \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     it("should subscribe to channel and consume buffer", async () => {
-
         var channel = "foo";
         var data = {
             foo: "bar",
         };
 
         client.SubscribeToChannel(channel, function (message: string) {
-            expect(message).toBe(
-                JSON.stringify(data)
-            );
-        })
-    })
+            expect(message).toBe(JSON.stringify(data));
+        });
+    });
 
     it("should publish to channel as buffer", async () => {
         var channel = "foo";
@@ -63,72 +59,78 @@ describe("RedisClientTests", () => {
     //////////////////////////////// Set Tests \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     it("should add to set", async () => {
         const key = "setKey";
-        const value = "foo:bar"
+        const value = "foo:bar";
 
-        await client.AddToSet(key, value)
-    })
+        await client.AddToSet(key, value);
+    });
 
     it("should list set items", async () => {
         const key = "setKey";
-        const value = Array<string>("foo:bar")
+        const value = Array<string>("foo:bar");
 
-        await expect(client.ListSetItems(key)).resolves.toStrictEqual(value)
-    })
+        await expect(client.ListSetItems(key)).resolves.toStrictEqual(value);
+    });
 
     it("should remove set item", async () => {
         const key = "setKey";
-        const value = Array<string>("foo:bar")
+        const value = Array<string>("foo:bar");
 
-        await client.RemoveFromSet(key, value)
-        await expect(client.ListSetItems(key)).resolves.toHaveLength(0)
-    })
+        await client.RemoveFromSet(key, value);
+        await expect(client.ListSetItems(key)).resolves.toHaveLength(0);
+    });
 
     //////////////////////////////// HashSet Tests \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     it("should set hashset key value", async () => {
-        const key = "hashKey"
-        const value = "foo:bar"
-        const hashField = "foo"
-        await client.SetKeyToHashSet(key, hashField, value)
-    })
+        const key = "hashKey";
+        const value = "foo:bar";
+        const hashField = "foo";
+        await client.SetKeyToHashSet(key, hashField, value);
+    });
 
     it("should get value for field from hashset", async () => {
-        const key = "hashKey"
-        const value ="foo:bar"
-        const hashField = "foo"
+        const key = "hashKey";
+        const value = "foo:bar";
+        const hashField = "foo";
 
-        await expect(client.GetKeyFromHashSet(key,hashField)).resolves.toBe(value)
-    })
+        await expect(client.GetKeyFromHashSet(key, hashField)).resolves.toBe(
+            value
+        );
+    });
 
-    it("should remove key from hashset", async()=>{
-        const key = "hashKey"
-        const hashField = "foo"
+    it("should remove key from hashset", async () => {
+        const key = "hashKey";
+        const hashField = "foo";
 
-        await client.RemoveKeyFromHashSet(key,hashField)
+        await client.RemoveKeyFromHashSet(key, hashField);
 
-        await expect(client.GetKeyFromHashSet(key,hashField)).resolves.toBeNull()
-    })
+        await expect(
+            client.GetKeyFromHashSet(key, hashField)
+        ).resolves.toBeNull();
+    });
 
-     //////////////////////////////// ZSet Tests \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    //////////////////////////////// ZSet Tests \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-     it("should add to set", async () => {
+    it("should add to set", async () => {
         const key = "setKey";
-        const value = "foo:bar"
+        const value = "foo:bar";
 
-        await client.AddToSortedSet(key, value)
-    })
+        await client.AddToSortedSet(key, value);
+    });
 
     it("should list set items", async () => {
         const key = "setKey";
-        const value = Array<string>("foo:bar")
+        const value = Array<string>("foo:bar");
 
-        await expect(client.GetItemsFromSortedSet(key)).resolves.toStrictEqual(value)
-    })
+        await expect(client.GetItemsFromSortedSet(key)).resolves.toStrictEqual(
+            value
+        );
+    });
 
     it("should remove set item", async () => {
         const key = "setKey";
-        const value = Array<string>("foo:bar")
+        const value = Array<string>("foo:bar");
 
-        await client.RemoveItemFromSortedSet(key, value)
-        await expect(client.ListSetItems(key)).resolves.toHaveLength(0)
-    })
+        await client.RemoveItemFromSortedSet(key, value);
+        await expect(client.ListSetItems(key)).resolves.toHaveLength(0);
+    });
 });
