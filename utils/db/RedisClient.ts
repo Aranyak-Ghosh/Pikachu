@@ -146,6 +146,68 @@ class RedisClient {
         }
     }
 
+    public async SetKeyToHashSet(key: RedisModule.KeyType, field: string, value: RedisModule.ValueType) {
+        this._logger.Info("Adding value {0} to hashset {1} with hashkey {2}", value, key, field)
+        try {
+            await this._client.hset(key, field, value)
+        } catch (ex) {
+            this._logger.Error("Unable to write to redis", ex);
+            throw ex;
+        }
+    }
+
+    public async GetKeyFromHashSet(key: RedisModule.KeyType, field: string): Promise<string | null> {
+        this._logger.Info("Getting hashkey {0} from Key {1}", field, key)
+        try {
+            let data = await this._client.hget(key, field)
+            return data;
+        } catch (ex) {
+            this._logger.Error("Unable to read key {0} from redis", key, ex);
+            throw ex;
+        }
+    }
+
+    public async RemoveKeyFromHashSet(key: RedisModule.KeyType, field: string) {
+        this._logger.Info("Removing field {0} from set {1}", field, key);
+        try {
+            await this._client.hdel(key, field)
+        } catch (ex) {
+            this._logger.Error("Unable to delete field {0} from key {1} from redis", field, key, ex);
+            throw ex;
+        }
+    }
+
+    public async AddToSortedSet(key: RedisModule.KeyType, value: string, priority: number = 0) {
+        this._logger.Info("Adding {0} to sorted set {1}", value, key)
+        try {
+            await this._client.zadd(key, priority, value);
+        } catch (ex) {
+            this._logger.Error("Failed to add {0} to sorted set {1}", value, key, ex)
+            throw ex;
+        }
+    }
+
+    public async GetItemsFromSortedSet(key: RedisModule.KeyType, numItems: number = 1): Promise<Array<string>> {
+        this._logger.Info("Fetching {0} items from {1}", numItems, key);
+        try {
+            let data = this._client.zrange(key, 0, numItems - 1);
+            return data;
+        } catch (ex) {
+            this._logger.Error("Failed to fetch data from {0}", key);
+            throw ex;
+        }
+    }
+
+    public async RemoveItemFromSortedSet(key: RedisModule.KeyType, item: string) {
+        this._logger.Info("Removing item {0} from sorted set with {1}", item, key)
+        try {
+            await this._client.zrem(key, item);
+        } catch (ex) {
+            this._logger.Error("Failed to remove item {0} from set {1}", item, key);
+            throw ex;
+        }
+    }
+
     public Disconnect() {
         if (this._client != undefined && this._client != null) {
             this._client.disconnect();
