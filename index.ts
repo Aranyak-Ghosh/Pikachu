@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 import {
     SocketServerOptions,
@@ -7,7 +7,8 @@ import {
 
 import { v4 } from "uuid";
 
-require("dotenv").config()
+import dotenv from "dotenv";
+dotenv.config();
 
 const ENVIRONMENT = process.env.ENV || "dev";
 
@@ -40,4 +41,3 @@ const MESSAGE_BROKER_URL =
     process.env.MESSAGE_BROKER_URL || "http://localhost:3199";
 
 let agOptions: any = {};
-

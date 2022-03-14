@@ -1,16 +1,14 @@
-'use strict';
+"use strict";
 
-import { UserSocket } from "../Types/SocketConnection"
+import { UserSocket } from "../Types/SocketConnection";
 
 class SocketManager {
-
     //Collection of sockets mapped to userId
     private _sockets: Record<string, UserSocket>;
 
     private static _instance?: SocketManager;
 
-    private constructor() {
-    }
+    private constructor() {}
 
     public static Initialize(): SocketManager {
         const socketManager = new SocketManager();
@@ -36,14 +34,17 @@ class SocketManager {
     }
 
     public GetSocketForUser(userId: string): UserSocket | null {
-        return this._sockets[userId]
+        return this._sockets[userId];
     }
 
     public DeleteSocketEntry(userId: string) {
-        if (this._sockets[userId] != undefined && this._sockets[userId] != null) {
+        if (
+            this._sockets[userId] != undefined &&
+            this._sockets[userId] != null
+        ) {
             delete this._sockets[userId];
         }
     }
 }
 
-export default SocketManager
+export default SocketManager;

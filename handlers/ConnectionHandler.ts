@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 import { AGServerSocket } from "socketcluster-server";
 import { SocketServerOptions } from "../types/SocketServerOptions";
@@ -8,6 +8,5 @@ async function onClientConnectedHandler(
     serverOptions: SocketServerOptions
 ) {
     for await (let request of socket.procedure("login")) {
-
     }
 }

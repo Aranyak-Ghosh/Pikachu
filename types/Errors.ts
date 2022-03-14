@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 class ClientNotInitializedError extends Error {
     constructor(ClientType: string) {
         super(ClientType + " Client not initialized");

@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 import { AGServerSocket } from "socketcluster-server";
 
 interface UserSocket {
     UserID: string;
     SessionID: string;
-    Socket: AGServerSocket
+    Socket: AGServerSocket;
 }
 
 export type { UserSocket };
