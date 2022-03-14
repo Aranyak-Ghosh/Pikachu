@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Hypertext Transfer Protocol (HTTP) response status codes.

@@ -1,3 +1,4 @@
+'use strict';
 import { LogLevel } from "../../../types/Log";
 
 abstract class ILogger {

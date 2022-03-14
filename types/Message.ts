@@ -1,3 +1,4 @@
+'use strict';
 // Template Interface for RPC Message
 // Language: typescript
 // Description: Message sent to invoke RPC
@@ -7,7 +8,7 @@ interface RPCMessage<T> {
 }
 
 interface AuthRequestMessage {
-    
+
 }
 
 // Template Interface for Socket Message

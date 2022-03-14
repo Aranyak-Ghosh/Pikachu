@@ -1,3 +1,4 @@
+'use strict';
 import { AGServerSocket } from "socketcluster-server";
 
 interface UserSocket {

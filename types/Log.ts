@@ -1,5 +1,6 @@
+'use strict';
 interface LogModel {
-    TimeStamp : Date
+    TimeStamp: Date
     AdditionalData?: any
     Severity: string
 }
@@ -12,4 +13,4 @@ enum LogLevel {
     Error
 }
 
-export {LogModel, LogLevel}
+export { LogModel, LogLevel }
