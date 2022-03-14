@@ -13,4 +13,11 @@ class RedisPublishError extends Error {
     }
 }
 
-export { ClientNotInitializedError, RedisPublishError };
+class TokenValidationError extends Error {
+    constructor() {
+        super("Failed to validate token");
+        this.name = TokenValidationError.name;
+    }
+}
+
+export { ClientNotInitializedError, RedisPublishError, TokenValidationError };
