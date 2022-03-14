@@ -208,13 +208,20 @@ class RedisClient {
         }
     }
 
-    public Disconnect() {
+    private Disconnect() {
         if (this._client != undefined && this._client != null) {
             this._client.disconnect();
         }
 
         if (this._subscriberClient != undefined && this._subscriberClient != null) {
             this._subscriberClient.disconnect();
+        }
+    }
+
+    public static DeInitialize(){
+        if(this._instance != undefined && this._instance != null){
+            RedisClient._instance?.Disconnect();
+            delete RedisClient._instance;
         }
     }
 }

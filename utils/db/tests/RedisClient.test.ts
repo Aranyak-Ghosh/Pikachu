@@ -7,7 +7,7 @@ beforeAll(() => {
 })
 
 afterAll((done) => {
-    client.Disconnect();
+    RedisClient.DeInitialize();
     done();
 });
 
