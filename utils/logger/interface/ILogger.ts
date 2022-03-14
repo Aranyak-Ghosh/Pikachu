@@ -1,4 +1,4 @@
-import { LogLevel } from "../../types/Log";
+import { LogLevel } from "../../../types/Log";
 
 abstract class ILogger {
   public abstract Log(
