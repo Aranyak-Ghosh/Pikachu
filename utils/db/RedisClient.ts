@@ -5,10 +5,13 @@ import { ClientNotInitializedError } from "../../types/Errors";
 import { ILogger } from "../logger/ILogger";
 
 class RedisClient {
+    private _subscriberClient: RedisModule.Redis;
     private _client: RedisModule.Redis;
     private static _instance?: RedisClient;
     private static readonly CLIENT_TYPE: string = "Redis";
     private _logger: ILogger;
+
+    private callbacks: Record<string, Function>;
 
     private TTL: number;
 
@@ -17,11 +20,15 @@ class RedisClient {
 
         RedisClient._instance._logger = ConsoleLogger.GetInstance();
 
+        RedisClient._instance.callbacks = {}
+
         RedisClient._instance.TTL = 86400;
 
         if (options == null || options == undefined) {
             RedisClient._instance._client = new RedisModule();
+            RedisClient._instance._subscriberClient = new RedisModule();
         } else {
+            RedisClient._instance._subscriberClient = new RedisModule(options);
             RedisClient._instance._client = new RedisModule(options);
         }
         return RedisClient._instance;
@@ -47,6 +54,22 @@ class RedisClient {
         }
     }
 
+    public async SubscribeToChannel(chan: string, onMessageReceived: Function) {
+        this._logger.Info("Subscribing to channel {0}", chan)
+        this.callbacks[chan] = onMessageReceived;
+        try {
+            this._subscriberClient.on("message", (channel, message) => {
+                let cb = this.callbacks[channel];
+                if (cb != null && cb != undefined) {
+                    cb(message);
+                }
+            })
+        } catch (ex) {
+            this._logger.Error("Failed to subscribe to channel", ex)
+            throw ex;
+        }
+    }
+
     public async SetKeyValueBuffered(
         key: RedisModule.KeyType,
         value: any,
@@ -68,9 +91,59 @@ class RedisClient {
         key: RedisModule.KeyType
     ): Promise<string | null> {
         this._logger.Info("Fetching key {0}", key);
-        let data = await this._client.get(key);
+        try {
+            let data = await this._client.get(key);
+            return data;
+        } catch (ex) {
+            this._logger.Error("Unable to get key {0} redis", key, ex);
+            throw ex;
+        }
+    }
 
-        return data;
+    public async AppendToList(key: RedisModule.KeyType, value: RedisModule.ValueType) {
+
+        this._logger.Info("Appending {0} to key {1} in redis", value, key)
+        try {
+
+            await this._client.append(
+                key,
+                value
+            );
+        } catch (ex) {
+            this._logger.Error("Unable to write to redis", ex);
+            throw ex;
+        }
+    }
+
+    public async AddToSet(key: RedisModule.KeyType, value: RedisModule.ValueType) {
+        this._logger.Info("Appending {0} to key {1} in redis", value, key)
+        try {
+            await this._client.sadd(key, value)
+        } catch (ex) {
+            this._logger.Error("Unable to write to redis", ex);
+            throw ex;
+        }
+    }
+
+    public async ListSet(key: RedisModule.KeyType): Promise<Array<string>> {
+        this._logger.Info("Listing items from set {0}", key)
+        try {
+            var data = await this._client.smembers(key);
+            return data;
+        } catch (ex) {
+            this._logger.Error("Unable to read key {0} from redis", key, ex);
+            throw ex;
+        }
+    }
+
+    public async RemoveFromSet(key: RedisModule.KeyType, value: RedisModule.ValueType) {
+        this._logger.Info("Removing value {0} from set {1}", key, value);
+        try {
+            await this._client.srem(key, value)
+        } catch (ex) {
+            this._logger.Error("Unable to delete value {0} from key {1} from redis", value, key, ex);
+            throw ex;
+        }
     }
 
     public Disconnect() {
