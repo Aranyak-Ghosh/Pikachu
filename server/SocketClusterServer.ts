@@ -5,7 +5,7 @@ import * as SocketClusterServer from "socketcluster-server"
 import { v4 } from "uuid"
 
 import { SocketServerOptions } from "../types/SocketServerOptions"
-import {ILogger} from "../utils/logger/ILogger"
+import { ILogger } from "../utils/logger/interface/ILogger"
 
 class SocketClusterServerInstance {
     private _httpServer?: http.Server;
@@ -69,7 +69,7 @@ class SocketClusterServerInstance {
         this._logger.Info("Server initialized on port - ", this._serverOptions.port);
     }
 
-    
+
 
 }
 
