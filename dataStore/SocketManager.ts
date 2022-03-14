@@ -1,6 +1,5 @@
 'use strict';
 
-import { AGServerSocket } from "socketcluster-server";
 import { UserSocket } from "../Types/SocketConnection"
 
 class SocketManager {
@@ -8,19 +7,15 @@ class SocketManager {
     //Collection of sockets mapped to userId
     private _sockets: Record<string, UserSocket>;
 
-    //Instance name for socket cluster server
-    private _instanceName: string;
-
     private static _instance?: SocketManager;
 
     private constructor() {
     }
 
-    public static Initialize(instanceName: string): SocketManager {
+    public static Initialize(): SocketManager {
         const socketManager = new SocketManager();
 
         socketManager._sockets = {};
-        socketManager._instanceName = instanceName;
 
         SocketManager._instance = socketManager;
 
@@ -36,5 +31,19 @@ class SocketManager {
             delete SocketManager._instance;
     }
 
+    public RegisterSocket(userId: string, socket: UserSocket) {
+        this._sockets[userId] = socket;
+    }
 
+    public GetSocketForUser(userId: string): UserSocket | null {
+        return this._sockets[userId]
+    }
+
+    public DeleteSocketEntry(userId: string) {
+        if (this._sockets[userId] != undefined && this._sockets[userId] != null) {
+            delete this._sockets[userId];
+        }
+    }
 }
+
+export default SocketManager
