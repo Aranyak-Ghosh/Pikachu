@@ -1,5 +1,5 @@
 import { LogLevel } from "types/Log";
-import { ILogger } from "./ILogger";
+import { ILogger } from "./interface/ILogger";
 
 class ConsoleLogger extends ILogger {
     public Log(severity: LogLevel, message: string, ...args: any[]): void {

@@ -2,7 +2,7 @@ import RedisModule from "ioredis";
 import ConsoleLogger from "../logger/ConsoleLogger";
 
 import { ClientNotInitializedError } from "../../types/Errors";
-import { ILogger } from "../logger/ILogger";
+import { ILogger } from "../logger/interface/ILogger";
 
 class RedisClient {
     private _subscriberClient: RedisModule.Redis;
