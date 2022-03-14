@@ -125,7 +125,7 @@ class RedisClient {
         }
     }
 
-    public async ListSet(key: RedisModule.KeyType): Promise<Array<string>> {
+    public async ListSetItems(key: RedisModule.KeyType): Promise<Array<string>> {
         this._logger.Info("Listing items from set {0}", key)
         try {
             var data = await this._client.smembers(key);
@@ -198,12 +198,12 @@ class RedisClient {
         }
     }
 
-    public async RemoveItemFromSortedSet(key: RedisModule.KeyType, item: string) {
-        this._logger.Info("Removing item {0} from sorted set with {1}", item, key)
+    public async RemoveItemFromSortedSet(key: RedisModule.KeyType, items: RedisModule.ValueType) {
+        this._logger.Info("Removing item {0} from sorted set with {1}", items, key)
         try {
-            await this._client.zrem(key, item);
+            await this._client.zrem(key, items);
         } catch (ex) {
-            this._logger.Error("Failed to remove item {0} from set {1}", item, key);
+            this._logger.Error("Failed to remove item {0} from set {1}", items, key);
             throw ex;
         }
     }
@@ -211,6 +211,10 @@ class RedisClient {
     public Disconnect() {
         if (this._client != undefined && this._client != null) {
             this._client.disconnect();
+        }
+
+        if (this._subscriberClient != undefined && this._subscriberClient != null) {
+            this._subscriberClient.disconnect();
         }
     }
 }
