@@ -35,20 +35,20 @@ class SocketManager {
             delete SocketManager._instance;
     }
 
-    public RegisterSocket(userId: string, socket: AGServerSocket) {
-        this._sockets[userId] = socket;
+    public RegisterSocket( socket: AGServerSocket) {
+        this._sockets[socket.id] = socket;
     }
 
-    public GetSocketForUser(userId: string): AGServerSocket | null {
-        return this._sockets[userId];
+    public GetSocketForUser(socketId: string): AGServerSocket | null {
+        return this._sockets[socketId];
     }
 
-    public DeleteSocketEntry(userId: string) {
+    public DeleteSocketEntry(socketId: string) {
         if (
-            this._sockets[userId] != undefined &&
-            this._sockets[userId] != null
+            this._sockets[socketId] != undefined &&
+            this._sockets[socketId] != null
         ) {
-            delete this._sockets[userId];
+            delete this._sockets[socketId];
         }
     }
 }
