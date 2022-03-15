@@ -4,7 +4,6 @@ import { AGServerSocket } from "socketcluster-server";
 import { TokenClaims } from "../types/Claims";
 import TokenParser from "../utils/auth/TokenParser";
 import { ILogger } from "../utils/logger/interface/ILogger";
-import { SocketServerOptions } from "../types/SocketServerOptions";
 import { SessionUser } from "../types/SocketConnection";
 import { UserState, UserType } from "../types/RedisEntries";
 import SocketService from "../services/SocketService";
@@ -36,6 +35,7 @@ async function onClientConnectedHandler(
 
                 let service: SocketService = SocketService.GetInstance();
                 await service.RegisterUserSocket(socket, authenticatedUser);
+                //TODO: Queue Presense notification
                 request.end();
                 socket.setAuthToken(authenticatedUser);
             } else {
