@@ -40,7 +40,7 @@ class SocketService {
             sessionUser.Id
         );
         if (this.socketManager != undefined && this.socketManager != null) {
-            this.socketManager.RegisterSocket(socketInstance);
+            this.socketManager.RegisterSocket(socketInstance, sessionUser.Id);
         }
 
         await this.addSocketInstanceToCache(sessionUser, socketInstance.id);
@@ -52,7 +52,7 @@ class SocketService {
             let socket = this.socketManager?.GetSocketForUser(
                 redisUser.SocketId
             );
-            return socket ?? null;
+            return socket ? socket.Socket : null;
         } catch (ex) {
             this._logger.Error(
                 "Failed to fetch user socket for id {0}",
