@@ -35,7 +35,7 @@ class RedisClient {
         return RedisClient._instance;
     }
 
-    public GetInstance(): RedisClient {
+    public static GetInstance(): RedisClient {
         if (
             RedisClient._instance != null &&
             RedisClient._instance != undefined
@@ -97,6 +97,16 @@ class RedisClient {
             return data;
         } catch (ex) {
             this._logger.Error("Unable to get key {0} redis", key, ex);
+            throw ex;
+        }
+    }
+
+    public async ExpireKeyValue(key: RedisModule.KeyType) {
+        this._logger.Info("Removing key {0}", key);
+        try {
+            await this._client.expire(key, 0);
+        } catch (ex) {
+            this._logger.Error("Unable to expire key {0} redis", key, ex);
             throw ex;
         }
     }
