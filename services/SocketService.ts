@@ -3,7 +3,7 @@
 import SocketManager from "dataStore/SocketManager";
 import { AGServerSocket } from "socketcluster-server";
 import { RedisClient } from "../utils/db/RedisClient";
-import { SessionUser } from "../types/SocketConnection";
+import { SessionUser, UserSocket } from "../types/SocketConnection";
 import { RedisUserEntry } from "../types/RedisEntries";
 import { ILogger } from "utils/logger/interface/ILogger";
 class SocketService {
@@ -46,13 +46,13 @@ class SocketService {
         await this.addSocketInstanceToCache(sessionUser, socketInstance.id);
     }
 
-    public async GetSocketUser(userId: string): Promise<AGServerSocket | null> {
+    public async GetSocketUser(userId: string): Promise<UserSocket | null> {
         try {
             let redisUser = await this.getSocketInstanceFromCache(userId);
             let socket = this.socketManager?.GetSocketForUser(
                 redisUser.SocketId
             );
-            return socket ? socket.Socket : null;
+            return socket ?? null;
         } catch (ex) {
             this._logger.Error(
                 "Failed to fetch user socket for id {0}",
