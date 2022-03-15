@@ -151,4 +151,4 @@ function generateQueryString(params: any): string {
     return queryString;
 }
 
-export { get, post, put, patch, del };
+export default { get, post, put, patch, del };
