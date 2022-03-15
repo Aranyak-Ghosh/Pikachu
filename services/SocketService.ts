@@ -10,16 +10,26 @@ class SocketService {
     private _instanceName: string;
     private _logger: ILogger;
 
+    private static _instance: SocketService;
+
     private socketManager: SocketManager | null;
     private redisClient: RedisClient | null;
 
-    constructor(instanceName: string, logger: ILogger) {
-        this._instanceName = instanceName;
-        this._logger = logger;
+    public static Initialize(instanceName: string, logger: ILogger) {
+        this._instance = new SocketService();
 
-        this.socketManager = SocketManager.GetInstance() ?? null;
-        this.redisClient = RedisClient.GetInstance() ?? null;
+        this._instance._instanceName = instanceName;
+        this._instance._logger = logger;
+
+        this._instance.socketManager = SocketManager.GetInstance() ?? null;
+        this._instance.redisClient = RedisClient.GetInstance() ?? null;
     }
+
+    public static GetInstance(): SocketService {
+        return this._instance;
+    }
+
+    constructor() {}
 
     public async RegisterUserSocket(
         socketInstance: AGServerSocket,
