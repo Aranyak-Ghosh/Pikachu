@@ -7,7 +7,7 @@ import { RedisClient } from "utils/db/RedisClient";
 import ConsoleLogger from "utils/logger/ConsoleLogger";
 
 async function onServerReadyHandler(serverOptions: SocketServerOptions) {
-    initializeDependencies(serverOptions.serverName)
+    initializeDependencies(serverOptions.serverName);
 }
 
 function initializeDependencies(instanceName: string) {
@@ -16,3 +16,5 @@ function initializeDependencies(instanceName: string) {
     let logger = new ConsoleLogger();
     SocketService.Initialize(instanceName, logger);
 }
+
+export default onServerReadyHandler;
