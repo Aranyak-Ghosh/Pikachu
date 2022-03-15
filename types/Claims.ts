@@ -15,6 +15,7 @@ interface TokenClaims {
     typ: string;
     user_email: string;
     user_id: string;
+    type: string;
 }
 
 export { TokenClaims };
