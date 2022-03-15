@@ -12,6 +12,7 @@ enum UserState {
 }
 
 interface RedisUserEntry {
+    SocketId: string;
     Type: UserType;
     Id: string;
     Sessions: Array<string>;
