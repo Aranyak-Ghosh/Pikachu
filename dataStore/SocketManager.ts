@@ -2,11 +2,11 @@
 
 import { AGServerSocket } from "socketcluster-server";
 import { ClientNotInitializedError } from "../types/Errors";
-
+import { UserSocket } from "../types/SocketConnection";
 class SocketManager {
     //Collection of sockets mapped to userId
-    private _sockets: Record<string, AGServerSocket>;
-    private static readonly CLIENT_TYPE : string = "SocketManager"
+    private _sockets: Record<string, UserSocket>;
+    private static readonly CLIENT_TYPE: string = "SocketManager";
     private static _instance?: SocketManager;
 
     private constructor() {}
@@ -35,11 +35,11 @@ class SocketManager {
             delete SocketManager._instance;
     }
 
-    public RegisterSocket( socket: AGServerSocket) {
-        this._sockets[socket.id] = socket;
+    public RegisterSocket(socket: AGServerSocket, userId: string) {
+        this._sockets[socket.id] = { Socket: socket, UserId: userId };
     }
 
-    public GetSocketForUser(socketId: string): AGServerSocket | null {
+    public GetSocketForUser(socketId: string): UserSocket | null {
         return this._sockets[socketId];
     }
 
