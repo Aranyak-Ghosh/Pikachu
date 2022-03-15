@@ -22,13 +22,12 @@ class SocketClusterServerInstance {
     private _serverOptions: SocketServerOptions;
 
     private readonly CONNECT_EVENT = "connection";
-    private readonly CONNECT_FAIL = "connectionAbort";
+    // private readonly CONNECT_FAIL = "connectionAbort";
     private readonly DISCONNECT_EVENT = "disconnection";
     private readonly ERROR_EVENT = "error";
     private readonly WARNING_EVENT = "warning";
-    private readonly READY_EVENT = "ready";
-    private readonly BAD_TOKEN = "badSocketAuthToken";
-    private readonly AUTHENTICATED = "authenticated";
+    // private readonly BAD_TOKEN = "badSocketAuthToken";
+    // private readonly AUTHENTICATED = "authenticated";
 
     constructor(serverOptions: SocketServerOptions, logger: ILogger) {
         this._serverOptions = serverOptions;
@@ -79,16 +78,19 @@ class SocketClusterServerInstance {
         this.registerClientConnectedListener();
         this.registerClientDisconnectedListener();
     }
-    private async registerWarningListener(){
+    private async registerWarningListener() {
         if (this._scServer != undefined && this._scServer != null) {
             for await (let { warning } of this._scServer!.listener(
                 this.WARNING_EVENT
             )) {
-                ConsoleLogger.GetInstance().Warn("SockerClusterWarning", warning);
+                ConsoleLogger.GetInstance().Warn(
+                    "SockerClusterWarning",
+                    warning
+                );
             }
         } else throw new Error("Socket Server not initialized");
     }
-    private async registeErrorListener(){
+    private async registeErrorListener() {
         if (this._scServer != undefined && this._scServer != null) {
             for await (let { error } of this._scServer!.listener(
                 this.ERROR_EVENT
