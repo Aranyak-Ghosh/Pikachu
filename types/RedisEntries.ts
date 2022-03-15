@@ -3,6 +3,7 @@
 enum UserType {
     SessionUser = "SessionUser",
     Guest = "Guest",
+    LiveStreamUser = "LiveStreamUser"
 }
 
 enum UserState {
@@ -24,4 +25,5 @@ interface RedisUserEntry {
     LastName: string;
 }
 
-export type { UserType, UserState, RedisUserEntry };
+export {UserType, UserState}
+export type { RedisUserEntry };
