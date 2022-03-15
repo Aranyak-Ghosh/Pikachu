@@ -1,7 +1,11 @@
 "use strict";
 
+import onClientConnectedHandler from "handlers/ConnectionHandler";
+import onClientDisconnected from "handlers/DiscconectedHandler";
+import onServerReadyHandler from "handlers/ServerInitHandler";
 import http from "http";
 import * as SocketClusterServer from "socketcluster-server";
+import ConsoleLogger from "utils/logger/ConsoleLogger";
 import { v4 } from "uuid";
 
 import { SocketServerOptions } from "../types/SocketServerOptions";
@@ -19,7 +23,7 @@ class SocketClusterServerInstance {
 
     private readonly CONNECT_EVENT = "connection";
     private readonly CONNECT_FAIL = "connectionAbort";
-    private readonly DISCONNECT_EVENT = "disconnect";
+    private readonly DISCONNECT_EVENT = "disconnection";
     private readonly ERROR_EVENT = "error";
     private readonly WARNING_EVENT = "warning";
     private readonly READY_EVENT = "ready";
@@ -58,7 +62,9 @@ class SocketClusterServerInstance {
 
         this._logger.Info("Registering Event Handlers");
         //Register Listeners
-
+        this.registerServerReadyListener();
+        this.registerWarningListener();
+        this.registeErrorListener();
         //Start Server
         // Setup HTTP server to listen on given port
         this._httpServer.listen(this._serverOptions.port);
@@ -66,6 +72,53 @@ class SocketClusterServerInstance {
             "Server initialized on port - ",
             this._serverOptions.port
         );
+    }
+
+    private registerServerReadyListener() {
+        onServerReadyHandler(this._serverOptions);
+        this.registerClientConnectedListener();
+        this.registerClientDisconnectedListener();
+    }
+    private async registerWarningListener(){
+        if (this._scServer != undefined && this._scServer != null) {
+            for await (let { warning } of this._scServer!.listener(
+                this.WARNING_EVENT
+            )) {
+                ConsoleLogger.GetInstance().Warn("SockerClusterWarning", warning);
+            }
+        } else throw new Error("Socket Server not initialized");
+    }
+    private async registeErrorListener(){
+        if (this._scServer != undefined && this._scServer != null) {
+            for await (let { error } of this._scServer!.listener(
+                this.ERROR_EVENT
+            )) {
+                ConsoleLogger.GetInstance().Error("SockerClusterError", error);
+            }
+        } else throw new Error("Socket Server not initialized");
+    }
+    private async registerClientDisconnectedListener() {
+        if (this._scServer != undefined && this._scServer != null) {
+            for await (let { socket, code, reason } of this._scServer!.listener(
+                this.DISCONNECT_EVENT
+            )) {
+                onClientDisconnected(
+                    socket,
+                    code,
+                    reason,
+                    ConsoleLogger.GetInstance()
+                );
+            }
+        } else throw new Error("Socket Server not initialized");
+    }
+    private async registerClientConnectedListener() {
+        if (this._scServer != undefined && this._scServer != null) {
+            for await (let { socket } of this._scServer!.listener(
+                this.CONNECT_EVENT
+            )) {
+                onClientConnectedHandler(socket, ConsoleLogger.GetInstance());
+            }
+        } else throw new Error("Socket Server not initialized");
     }
 }
 

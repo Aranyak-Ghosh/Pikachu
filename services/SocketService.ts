@@ -3,23 +3,33 @@
 import SocketManager from "dataStore/SocketManager";
 import { AGServerSocket } from "socketcluster-server";
 import { RedisClient } from "../utils/db/RedisClient";
-import { SessionUser } from "../types/SocketConnection";
+import { SessionUser, UserSocket } from "../types/SocketConnection";
 import { RedisUserEntry } from "../types/RedisEntries";
 import { ILogger } from "utils/logger/interface/ILogger";
 class SocketService {
     private _instanceName: string;
     private _logger: ILogger;
 
+    private static _instance: SocketService;
+
     private socketManager: SocketManager | null;
     private redisClient: RedisClient | null;
 
-    constructor(instanceName: string, logger: ILogger) {
-        this._instanceName = instanceName;
-        this._logger = logger;
+    public static Initialize(instanceName: string, logger: ILogger) {
+        this._instance = new SocketService();
 
-        this.socketManager = SocketManager.GetInstance() ?? null;
-        this.redisClient = RedisClient.GetInstance() ?? null;
+        this._instance._instanceName = instanceName;
+        this._instance._logger = logger;
+
+        this._instance.socketManager = SocketManager.GetInstance() ?? null;
+        this._instance.redisClient = RedisClient.GetInstance() ?? null;
     }
+
+    public static GetInstance(): SocketService {
+        return this._instance;
+    }
+
+    constructor() {}
 
     public async RegisterUserSocket(
         socketInstance: AGServerSocket,
@@ -30,13 +40,13 @@ class SocketService {
             sessionUser.Id
         );
         if (this.socketManager != undefined && this.socketManager != null) {
-            this.socketManager.RegisterSocket(socketInstance);
+            this.socketManager.RegisterSocket(socketInstance, sessionUser.Id);
         }
 
         await this.addSocketInstanceToCache(sessionUser, socketInstance.id);
     }
 
-    public async GetSocketUser(userId: string): Promise<AGServerSocket | null> {
+    public async GetSocketUser(userId: string): Promise<UserSocket | null> {
         try {
             let redisUser = await this.getSocketInstanceFromCache(userId);
             let socket = this.socketManager?.GetSocketForUser(

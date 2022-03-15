@@ -1,6 +1,12 @@
 "use strict";
 
+import { AGServerSocket } from "socketcluster-server";
 import { UserState, UserType } from "./RedisEntries";
+
+interface UserSocket {
+    Socket: AGServerSocket;
+    UserId: string;
+}
 
 interface SessionUser {
     Id: string;
@@ -13,4 +19,4 @@ interface SessionUser {
     HearingIds: Array<string>;
 }
 
-export type { SessionUser };
+export type { SessionUser, UserSocket };
