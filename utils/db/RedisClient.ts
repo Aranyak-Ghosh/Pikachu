@@ -101,6 +101,16 @@ class RedisClient {
         }
     }
 
+    public async ExpireKeyValue(key: RedisModule.KeyType) {
+        this._logger.Info("Removing key {0}", key);
+        try {
+            await this._client.expire(key, 0);
+        } catch (ex) {
+            this._logger.Error("Unable to expire key {0} redis", key, ex);
+            throw ex;
+        }
+    }
+
     public async AppendToList(
         key: RedisModule.KeyType,
         value: RedisModule.ValueType
