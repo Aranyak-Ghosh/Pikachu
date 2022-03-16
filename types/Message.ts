@@ -3,8 +3,8 @@
 // Language: typescript
 // Description: Message sent to invoke RPC
 interface RPCMessage<T> {
-    Audience: string[];
-    AdditionalData: T;
+  Audience: string[];
+  AdditionalData: T;
 }
 
 interface AuthRequestMessage {}
@@ -13,18 +13,25 @@ interface AuthRequestMessage {}
 // Language: typescript
 // Description: Message sent to
 interface SocketMessage {
-    SocketIDs: string[];
-    Type: string;
-    Data?: any;
-    TransactionID: string;
+  SocketIDs: string[];
+  Type: string;
+  Data?: any;
+  TransactionID: string;
 }
 
 // Template Interface for RPC Message
 // Language: typescript
 // Description: Message sent to invoke RPC
 interface BrokerMessage<T> {
-    RecipientIDs: string[];
-    Type: string;
-    Data?: T;
-    TransactionID: string;
+  RecipientIDs: string[];
+  Type: string;
+  Data?: T;
+  TransactionID: string;
+}
+
+interface ActualBrokerMessage {
+  audience: string[];
+  audienceType: string;
+  command: string;
+  Data?: any;
 }
