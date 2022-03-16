@@ -7,9 +7,9 @@ import {
 import { v4 } from "uuid";
 
 import dotenv from "dotenv";
+dotenv.config();
 import SocketClusterServerInstance from "server/SocketClusterServer";
 import ConsoleLogger from "utils/logger/ConsoleLogger";
-dotenv.config();
 
 // const ENVIRONMENT = process.env.ENV || "dev";
 
