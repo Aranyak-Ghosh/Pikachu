@@ -13,10 +13,8 @@ interface AuthRequestMessage {}
 // Language: typescript
 // Description: Message sent to
 interface SocketMessage {
-    SocketIDs: string[];
-    Type: string;
+    Command: string;
     Data?: any;
-    TransactionID: string;
 }
 
 // Template Interface for RPC Message
@@ -24,7 +22,6 @@ interface SocketMessage {
 // Description: Message sent to invoke RPC
 interface BrokerMessage {
     Audience: string[];
-    AudienceType: string;
     Command: string;
     Data?: any;
 }
