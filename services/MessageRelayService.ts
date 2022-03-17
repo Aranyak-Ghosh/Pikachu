@@ -34,7 +34,7 @@ class MessageRelayService {
             this._logger.Info("Received message id {0}", result);
 
             let serializedMsg = await this._redisClient.GetKeyFromHashSet(
-                this._instanceName,
+                this._instanceName+"-Commands",
                 messageId
             );
             if (serializedMsg != null) {
@@ -43,7 +43,7 @@ class MessageRelayService {
                     msg = JSON.parse(serializedMsg);
                     let relayMsg: SocketMessage = JSON.parse(serializedMsg);
                     //Relay message to all users
-                    msg.Audience.forEach(async (x) => {
+                    msg.audience.forEach(async (x) => {
                         let serializedReceipient =
                             await this._redisClient.GetValueForKey(x);
                         if (
@@ -65,7 +65,7 @@ class MessageRelayService {
                         messageId
                     );
                     await this._redisClient.RemoveKeyFromHashSet(
-                        this._instanceName,
+                        this._instanceName+"-Commands",
                         messageId
                     );
                 } catch (ex) {
