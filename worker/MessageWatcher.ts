@@ -6,7 +6,7 @@ import { ILogger } from "utils/logger/interface/ILogger";
 import ConsoleLogger from "utils/logger/ConsoleLogger";
 dotenv.config();
 
-let instanceName = process.env.INSTANCE_NAME || "pikachu";
+let instanceName = process.env.POD_NAME || "pikachu";
 
 let redisClient: RedisClient;
 redisClient = RedisClient.Initialize();
