@@ -4,7 +4,14 @@
   "description": "SockerClusterServer",
   "main": "index.ts",
   "scripts": {
-    "test": "jest"
+    "watch": "tsc -w",
+    "test": "jest",
+    "start": "node dist/index.js",
+		"nodemon": "nodemon dist/index.js",
+		"dev": "tsc -w | nodemon dist/index.js ",
+		"build": "tsc -p .",
+		"serve": "tsc -p . && node dist/index.js",
+		"nm": "nodemon --watch './**/*.ts' --exec 'yarn serve'"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
