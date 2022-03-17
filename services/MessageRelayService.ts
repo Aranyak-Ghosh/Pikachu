@@ -38,27 +38,43 @@ class MessageRelayService {
                 messageId
             );
             if (serializedMsg != null) {
-                let msg: BrokerMessage;
-                msg = JSON.parse(serializedMsg);
-                let relayMsg: SocketMessage = JSON.parse(serializedMsg);
-                //Relay message to all users
-                msg.Audience.forEach(async (x) => {
-                    let serializedReceipient =
-                        await this._redisClient.GetValueForKey(x);
-                    if (
-                        serializedReceipient != null &&
-                        serializedReceipient != undefined
-                    ) {
-                        let recepient: RedisUserEntry =
-                            JSON.parse(serializedReceipient);
-                        let socket = this._socketManager.GetSocketForUser(
-                            recepient.SocketId
-                        );
-                        if (socket != null) {
-                            socket.Socket.transmit("command",relayMsg,{});
+                try {
+                    let msg: BrokerMessage;
+                    msg = JSON.parse(serializedMsg);
+                    let relayMsg: SocketMessage = JSON.parse(serializedMsg);
+                    //Relay message to all users
+                    msg.Audience.forEach(async (x) => {
+                        let serializedReceipient =
+                            await this._redisClient.GetValueForKey(x);
+                        if (
+                            serializedReceipient != null &&
+                            serializedReceipient != undefined
+                        ) {
+                            let recepient: RedisUserEntry =
+                                JSON.parse(serializedReceipient);
+                            let socket = this._socketManager.GetSocketForUser(
+                                recepient.SocketId
+                            );
+                            if (socket != null) {
+                                socket.Socket.transmit("command", relayMsg, {});
+                            }
                         }
-                    }
-                });
+                    });
+                    await this._redisClient.RemoveItemFromSortedSet(
+                        this._instanceName,
+                        messageId
+                    );
+                    await this._redisClient.RemoveKeyFromHashSet(
+                        this._instanceName,
+                        messageId
+                    );
+                } catch (ex) {
+                    this._logger.Error(
+                        "Failed to process message",
+                        messageId,
+                        ex
+                    );
+                }
             }
         });
     }
