@@ -21,6 +21,7 @@ const SOCKETCLUSTER_WS_ENGINE = process.env.SOCKETCLUSTER_WS_ENGINE || "ws";
 // const SOCKETCLUSTER_LOG_LEVEL = process.env.SOCKETCLUSTER_LOG_LEVEL || 2;
 
 const SCC_INSTANCE_ID = process.env.POD_NAME || v4();
+process.env.POD_NAME = SCC_INSTANCE_ID
 const SCC_STATE_SERVER_HOST = process.env.SCC_STATE_SERVER_HOST || "localhost";
 const SCC_STATE_SERVER_PORT = Number(process.env.SCC_STATE_SERVER_PORT) || 8080;
 // const SCC_MAPPING_ENGINE = process.env.SCC_MAPPING_ENGINE || null;
@@ -48,7 +49,7 @@ const DATABASE_USERNAME = process.env.DATABASE_USERNAME;
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
 
 const MESSAGE_BROKER_URL =
-    process.env.MESSAGE_BROKER_URL || "http://localhost:3199";
+    process.env.MESSAGE_BROKER_URL || "http://localhost:4000";
 
 let agOptions: SocketServerOptions = {
     port: parseInt(SOCKETCLUSTER_PORT.toString()),
