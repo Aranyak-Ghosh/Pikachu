@@ -14,7 +14,7 @@ class MessageRelayService {
     private _instanceName: string;
     constructor(instanceName: string, redisOptions: RedisOptions) {
         this._instanceName = instanceName;
-        this._worker = new Worker("../worker/MessageWatcher.ts");
+        this._worker = new Worker("./dist/worker/MessageWatcher.js");
         this._logger = ConsoleLogger.GetInstance();
         try {
             this._redisClient = RedisClient.GetInstance();

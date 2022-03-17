@@ -1,9 +1,9 @@
-import { RedisClient } from "utils/db/RedisClient";
+import { RedisClient } from "../utils/db/RedisClient";
 import { parentPort } from "worker_threads";
 
 import dotenv from "dotenv";
-import { ILogger } from "utils/logger/interface/ILogger";
-import ConsoleLogger from "utils/logger/ConsoleLogger";
+import { ILogger } from "../utils/logger/interface/ILogger";
+import ConsoleLogger from "../utils/logger/ConsoleLogger";
 import { RedisOptions } from "ioredis";
 dotenv.config();
 

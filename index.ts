@@ -7,10 +7,10 @@ import { v4 } from "uuid";
 import dotenv from "dotenv";
 dotenv.config();
 import SocketClusterServerInstance from "./server/SocketClusterServer";
-import ConsoleLogger from "utils/logger/ConsoleLogger";
-import { MessageRelayService } from "services/MessageRelayService";
+import ConsoleLogger from "./utils/logger/ConsoleLogger";
+import { MessageRelayService } from "./services/MessageRelayService";
 import { RedisOptions } from "ioredis";
-import { RedisClient } from "utils/db/RedisClient";
+import { RedisClient } from "./utils/db/RedisClient";
 
 // const ENVIRONMENT = process.env.ENV || "dev";
 
