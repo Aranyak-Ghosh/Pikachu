@@ -1,8 +1,6 @@
 "use strict";
 
-import {
-    SocketServerOptions,
-} from "./Types/SocketServerOptions";
+import { SocketServerOptions } from "./Types/SocketServerOptions";
 
 import { v4 } from "uuid";
 
@@ -11,6 +9,8 @@ dotenv.config();
 import SocketClusterServerInstance from "server/SocketClusterServer";
 import ConsoleLogger from "utils/logger/ConsoleLogger";
 import { MessageRelayService } from "services/MessageRelayService";
+import { RedisOptions } from "ioredis";
+import { RedisClient } from "utils/db/RedisClient";
 
 // const ENVIRONMENT = process.env.ENV || "dev";
 
@@ -39,6 +39,14 @@ const SCC_STATE_SERVER_PORT = Number(process.env.SCC_STATE_SERVER_PORT) || 8080;
 // const SCC_BROKER_RETRY_DELAY =
 //     Number(process.env.SCC_BROKER_RETRY_DELAY) || null;
 const DATABASE_URL = process.env.DATABASE_URL || "redis://localhost:6379";
+const DATABASE_PORT =
+    process.env.DATABASE_PORT == null || process.env.DATABASE_PORT == undefined
+        ? 6379
+        : parseInt(process.env.DATABASE_PORT!);
+const DATABASE_HOST = process.env.DATABASE_HOST || "localhost";
+const DATABASE_USERNAME = process.env.DATABASE_USERNAME;
+const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
+
 const MESSAGE_BROKER_URL =
     process.env.MESSAGE_BROKER_URL || "http://localhost:3199";
 
@@ -57,10 +65,20 @@ let agOptions: SocketServerOptions = {
     serverPort: SCC_STATE_SERVER_PORT,
 };
 
-const msgRelay = new MessageRelayService(SCC_INSTANCE_ID)
-msgRelay.run()
+let redisOptions: RedisOptions = {
+    port: DATABASE_PORT,
+    host: DATABASE_HOST,
+    reconnectOnError: (err): boolean => {
+        ConsoleLogger.GetInstance().Debug("Disconnected from redis", err);
+        return true;
+    },
+    username: DATABASE_USERNAME,
+    password: DATABASE_PASSWORD,
+};
 
-new SocketClusterServerInstance(
-    agOptions,
-    ConsoleLogger.GetInstance()
-);
+RedisClient.Initialize(redisOptions);
+
+const msgRelay = new MessageRelayService(SCC_INSTANCE_ID, redisOptions);
+msgRelay.run();
+
+new SocketClusterServerInstance(agOptions, ConsoleLogger.GetInstance());
