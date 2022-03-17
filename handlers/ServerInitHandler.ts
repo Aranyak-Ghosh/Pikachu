@@ -1,9 +1,9 @@
 "use strict";
 
-import SocketManager from "dataStore/SocketManager";
-import SocketService from "services/SocketService";
-import { SocketServerOptions } from "Types/SocketServerOptions";
-import ConsoleLogger from "utils/logger/ConsoleLogger";
+import SocketManager from "../dataStore/SocketManager";
+import SocketService from "../services/SocketService";
+import { SocketServerOptions } from "../types/SocketServerOptions";
+import ConsoleLogger from "../utils/logger/ConsoleLogger";
 
 async function onServerReadyHandler(serverOptions: SocketServerOptions) {
     initializeDependencies(

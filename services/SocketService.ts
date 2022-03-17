@@ -1,12 +1,12 @@
 "use strict";
 
-import SocketManager from "dataStore/SocketManager";
 import { AGServerSocket } from "socketcluster-server";
+import SocketManager from "../dataStore/SocketManager";
 import { RedisClient } from "../utils/db/RedisClient";
 import { SessionUser, UserSocket } from "../types/SocketConnection";
 import { RedisUserEntry } from "../types/RedisEntries";
-import { ILogger } from "utils/logger/interface/ILogger";
-import { NotificationType, PresenseUpdate } from "types/PresenseNotification";
+import { ILogger } from "../utils/logger/interface/ILogger";
+import { NotificationType, PresenseUpdate } from "../types/PresenseNotification";
 import RestClient from "../utils/rest/RestClient";
 
 class SocketService {

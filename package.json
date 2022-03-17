@@ -1,6 +1,7 @@
 {
   "name": "pikachu",
   "version": "1.0.0",
+  "type": "module",
   "description": "SockerClusterServer",
   "main": "index.ts",
   "scripts": {

@@ -1,13 +1,13 @@
 "use strict";
 
-import onClientConnectedHandler from "handlers/ConnectionHandler";
-import onClientDisconnected from "handlers/DiscconectedHandler";
-import onServerReadyHandler from "handlers/ServerInitHandler";
 import http from "http";
 import * as SocketClusterServer from "socketcluster-server";
-import ConsoleLogger from "utils/logger/ConsoleLogger";
 import { v4 } from "uuid";
 
+import onClientConnectedHandler from "../handlers/ConnectionHandler";
+import onClientDisconnected from "../handlers/DiscconectedHandler";
+import onServerReadyHandler from "../handlers/ServerInitHandler";
+import ConsoleLogger from "../utils/logger/ConsoleLogger";
 import { SocketServerOptions } from "../types/SocketServerOptions";
 import { ILogger } from "../utils/logger/interface/ILogger";
 

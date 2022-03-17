@@ -1,8 +1,8 @@
 "use strict";
 
-import SocketService from "services/SocketService";
+import SocketService from "../services/SocketService";
 import { AGServerSocket } from "socketcluster-server";
-import { ILogger } from "utils/logger/interface/ILogger";
+import { ILogger } from "../utils/logger/interface/ILogger";
 
 async function onClientDisconnected(
     socket: AGServerSocket,

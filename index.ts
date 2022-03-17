@@ -1,12 +1,12 @@
 "use strict";
 
-import { SocketServerOptions } from "./Types/SocketServerOptions";
+import { SocketServerOptions } from "./types/SocketServerOptions";
 
 import { v4 } from "uuid";
 
 import dotenv from "dotenv";
 dotenv.config();
-import SocketClusterServerInstance from "server/SocketClusterServer";
+import SocketClusterServerInstance from "./server/SocketClusterServer";
 import ConsoleLogger from "utils/logger/ConsoleLogger";
 import { MessageRelayService } from "services/MessageRelayService";
 import { RedisOptions } from "ioredis";
