@@ -20,7 +20,6 @@ async function onClientDisconnected(
     if (socket.authToken && socket.authToken!.Id) {
         let service = SocketService.GetInstance();
         let userSocket = await service.GetSocketUser(socket.authToken.Id);
-        //TODO: Queue user disconnected message
         await service.RemoveUserSocket(userSocket!.UserId);
     }
 }

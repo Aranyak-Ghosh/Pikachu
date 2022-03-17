@@ -6,7 +6,10 @@ import { RedisClient } from "../utils/db/RedisClient";
 import { SessionUser, UserSocket } from "../types/SocketConnection";
 import { RedisUserEntry } from "../types/RedisEntries";
 import { ILogger } from "../utils/logger/interface/ILogger";
-import { NotificationType, PresenseUpdate } from "../types/PresenseNotification";
+import {
+    NotificationType,
+    PresenseUpdate,
+} from "../types/PresenseNotification";
 import RestClient from "../utils/rest/RestClient";
 
 class SocketService {
@@ -80,7 +83,14 @@ class SocketService {
     }
 
     public async RemoveUserSocket(userId: string) {
-        await this.removeSocketInstanceFromCache(userId);
+        this._logger.Info(
+            "Removing user with id {0} from cache and socket manager",
+            userId
+        );
+        let redisUser = await this.removeSocketInstanceFromCache(userId);
+
+        this._socketManager?.DeleteSocketEntry(redisUser.SocketId);
+        await this.sendPresenseUpdate(NotificationType.Removed, redisUser);
     }
 
     private async getSocketInstanceFromCache(
@@ -104,7 +114,9 @@ class SocketService {
         }
     }
 
-    private async removeSocketInstanceFromCache(userId: string) {
+    private async removeSocketInstanceFromCache(
+        userId: string
+    ): Promise<RedisUserEntry> {
         let client = this._redisClient;
         try {
             let serializedRedisEntry = await client!.GetValueForKey(userId);
@@ -123,6 +135,8 @@ class SocketService {
             });
 
             await Promise.all(promises);
+
+            return redisEntry;
         } catch (ex) {
             this._logger.Error(
                 "Unable to read/remove user info for userid {0} from cache",
