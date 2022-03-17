@@ -4,6 +4,7 @@ import { RedisClient } from "../utils/db/RedisClient";
 import ConsoleLogger from "../utils/logger/ConsoleLogger";
 import { ILogger } from "../utils/logger/interface/ILogger";
 import { Worker } from "worker_threads";
+import { RedisOptions } from "ioredis";
 
 class MessageRelayService {
     private _worker: Worker;
@@ -11,14 +12,14 @@ class MessageRelayService {
     private _redisClient: RedisClient;
     private _socketManager: SocketManager;
     private _instanceName: string;
-    constructor(instanceName: string) {
+    constructor(instanceName: string, redisOptions: RedisOptions) {
         this._instanceName = instanceName;
         this._worker = new Worker("../worker/MessageWatcher.ts");
         this._logger = ConsoleLogger.GetInstance();
         try {
             this._redisClient = RedisClient.GetInstance();
         } catch (ex) {
-            this._redisClient = RedisClient.Initialize();
+            this._redisClient = RedisClient.Initialize(redisOptions);
         }
         try {
             this._socketManager = SocketManager.GetInstance();
