@@ -33,15 +33,19 @@ redisClient = RedisClient.Initialize(redisOptions);
 let logger: ILogger;
 logger = ConsoleLogger.GetInstance();
 
-while (true) {
-    redisClient
-        .GetItemsFromSortedSet(instanceName, 1)
-        .then((res) => {
-            let messageId = res;
+async function run() {
+    while (true) {
+        try {
+            let messageId = await redisClient.GetItemsFromSortedSet(
+                instanceName,
+                1
+            );
             if (messageId != null && messageId.length > 0)
                 parentPort?.postMessage(messageId[0]);
-        })
-        .catch((err) => {
+        } catch (err) {
             logger.Error("Failed to read from zset", err);
-        });
+        }
+    }
 }
+
+run();
