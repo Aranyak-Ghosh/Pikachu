@@ -34,45 +34,68 @@ class MessageRelayService {
             this._logger.Info("Received message id {0}", result);
 
             let serializedMsg = await this._redisClient.GetKeyFromHashSet(
-                this._instanceName+"-Commands",
+                this._instanceName + "-Commands",
                 messageId
             );
             if (serializedMsg != null) {
+                let messageProcessed: boolean = true;
                 try {
                     let msg: BrokerMessage;
                     msg = JSON.parse(serializedMsg);
                     let relayMsg: SocketMessage = JSON.parse(serializedMsg);
                     //Relay message to all users
                     msg.audience.forEach(async (x) => {
-                        let serializedReceipient =
-                            await this._redisClient.GetValueForKey(x);
-                        if (
-                            serializedReceipient != null &&
-                            serializedReceipient != undefined
-                        ) {
-                            let recepient: RedisUserEntry =
-                                JSON.parse(serializedReceipient);
-                            let socket = this._socketManager.GetSocketForUser(
-                                recepient.SocketId
-                            );
-                            if (socket != null) {
-                                socket.Socket.transmit("command", relayMsg, {});
+                        try {
+                            let serializedReceipient =
+                                await this._redisClient.GetValueForKey(x);
+                            if (
+                                serializedReceipient != null &&
+                                serializedReceipient != undefined
+                            ) {
+                                let recepient: RedisUserEntry =
+                                    JSON.parse(serializedReceipient);
+                                let socket =
+                                    this._socketManager.GetSocketForUser(
+                                        recepient.SocketId
+                                    );
+                                if (socket != null) {
+                                    await socket.Socket.transmit(
+                                        "command",
+                                        relayMsg,
+                                        {}
+                                    );
+                                }
                             }
+                        } catch (ex) {
+                            messageProcessed = false;
+                            this._logger.Error(
+                                "Failed to process message",
+                                messageId,
+                                ex
+                            );
                         }
                     });
-                    await this._redisClient.RemoveItemFromSortedSet(
-                        this._instanceName,
-                        messageId
-                    );
-                    await this._redisClient.RemoveKeyFromHashSet(
-                        this._instanceName+"-Commands",
-                        messageId
-                    );
                 } catch (ex) {
                     this._logger.Error(
                         "Failed to process message",
                         messageId,
                         ex
+                    );
+                }
+                if (messageProcessed) {
+                    await this._redisClient.RemoveItemFromSortedSet(
+                        this._instanceName,
+                        messageId
+                    );
+                    await this._redisClient.RemoveKeyFromHashSet(
+                        this._instanceName + "-Commands",
+                        messageId
+                    );
+                } else {
+                    await this._redisClient.AddToSortedSet(
+                        this._instanceName,
+                        messageId,
+                        0
                     );
                 }
             }
