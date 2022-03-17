@@ -39,7 +39,8 @@ async function post(
 
         if (
             response.status == ResponseStatus.OK ||
-            response.status == ResponseStatus.CREATED
+            response.status == ResponseStatus.CREATED ||
+            response.status == ResponseStatus.ACCEPTED
         ) {
             return response.data;
         } else {
@@ -63,7 +64,8 @@ async function put(
 
         if (
             response.status == ResponseStatus.OK ||
-            response.status == ResponseStatus.NO_CONTENT
+            response.status == ResponseStatus.NO_CONTENT ||
+            response.status == ResponseStatus.ACCEPTED
         ) {
             return response.data;
         } else {
@@ -86,7 +88,8 @@ async function del(
 
         if (
             response.status == ResponseStatus.OK ||
-            response.status == ResponseStatus.NO_CONTENT
+            response.status == ResponseStatus.NO_CONTENT ||
+            response.status == ResponseStatus.ACCEPTED
         ) {
             return response.data;
         } else {
@@ -110,7 +113,8 @@ async function patch(
 
         if (
             response.status == ResponseStatus.OK ||
-            response.status == ResponseStatus.NO_CONTENT
+            response.status == ResponseStatus.NO_CONTENT ||
+            response.status == ResponseStatus.ACCEPTED
         ) {
             return response.data;
         } else {
