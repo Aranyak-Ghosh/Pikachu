@@ -1,7 +1,8 @@
-import SocketManager from "dataStore/SocketManager";
-import { RedisClient } from "utils/db/RedisClient";
-import ConsoleLogger from "utils/logger/ConsoleLogger";
-import { ILogger } from "utils/logger/interface/ILogger";
+import SocketManager from "../dataStore/SocketManager";
+import { RedisUserEntry } from "../types/RedisEntries";
+import { RedisClient } from "../utils/db/RedisClient";
+import ConsoleLogger from "../utils/logger/ConsoleLogger";
+import { ILogger } from "../utils/logger/interface/ILogger";
 import { Worker } from "worker_threads";
 
 class MessageRelayService {
@@ -31,14 +32,35 @@ class MessageRelayService {
             let messageId = result as string;
             this._logger.Info("Received message id {0}", result);
 
-            let serializedMsg = await this._redisClient.GetKeyFromHashSet(this._instanceName,messageId);
-            let msg : SocketMessage
-            if(serializedMsg!=null){
+            let serializedMsg = await this._redisClient.GetKeyFromHashSet(
+                this._instanceName,
+                messageId
+            );
+            if (serializedMsg != null) {
+                let msg: BrokerMessage;
                 msg = JSON.parse(serializedMsg);
+                let relayMsg: SocketMessage = JSON.parse(serializedMsg);
                 //Relay message to all users
+                msg.Audience.forEach(async (x) => {
+                    let serializedReceipient =
+                        await this._redisClient.GetValueForKey(x);
+                    if (
+                        serializedReceipient != null &&
+                        serializedReceipient != undefined
+                    ) {
+                        let recepient: RedisUserEntry =
+                            JSON.parse(serializedReceipient);
+                        let socket = this._socketManager.GetSocketForUser(
+                            recepient.SocketId
+                        );
+                        if (socket != null) {
+                            socket.Socket.transmit("command",relayMsg,{});
+                        }
+                    }
+                });
             }
         });
     }
 }
 
-export {MessageRelayService}
+export { MessageRelayService };
