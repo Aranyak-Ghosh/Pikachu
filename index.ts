@@ -7,9 +7,10 @@ import {
 import { v4 } from "uuid";
 
 import dotenv from "dotenv";
+dotenv.config();
 import SocketClusterServerInstance from "server/SocketClusterServer";
 import ConsoleLogger from "utils/logger/ConsoleLogger";
-dotenv.config();
+import { MessageRelayService } from "services/MessageRelayService";
 
 // const ENVIRONMENT = process.env.ENV || "dev";
 
@@ -19,7 +20,7 @@ const SOCKETCLUSTER_WS_ENGINE = process.env.SOCKETCLUSTER_WS_ENGINE || "ws";
 //     Number(process.env.SOCKETCLUSTER_SOCKET_CHANNEL_LIMIT) || 1000;
 // const SOCKETCLUSTER_LOG_LEVEL = process.env.SOCKETCLUSTER_LOG_LEVEL || 2;
 
-const SCC_INSTANCE_ID = v4();
+const SCC_INSTANCE_ID = process.env.POD_NAME || v4();
 const SCC_STATE_SERVER_HOST = process.env.SCC_STATE_SERVER_HOST || "localhost";
 const SCC_STATE_SERVER_PORT = Number(process.env.SCC_STATE_SERVER_PORT) || 8080;
 // const SCC_MAPPING_ENGINE = process.env.SCC_MAPPING_ENGINE || null;
@@ -55,6 +56,9 @@ let agOptions: SocketServerOptions = {
     serverHost: SCC_STATE_SERVER_HOST,
     serverPort: SCC_STATE_SERVER_PORT,
 };
+
+const msgRelay = new MessageRelayService(SCC_INSTANCE_ID)
+msgRelay.run()
 
 new SocketClusterServerInstance(
     agOptions,

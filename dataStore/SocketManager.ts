@@ -21,7 +21,7 @@ class SocketManager {
         return socketManager;
     }
 
-    public static GetInstance(): SocketManager | undefined {
+    public static GetInstance(): SocketManager {
         if (
             SocketManager._instance != null &&
             SocketManager._instance != undefined
