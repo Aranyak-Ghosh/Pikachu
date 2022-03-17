@@ -239,9 +239,13 @@ class RedisClient {
         key: RedisModule.KeyType,
         numItems: number = 1
     ): Promise<Array<string>> {
-        this._logger.Info("Fetching {0} items from {1}", numItems, key);
+        // this._logger.Info("Fetching {0} items from {1}", numItems, key);
         try {
-            let data = await this._client.zrange(key, 0, numItems - 1);
+            let data = await this._client.zrangebyscore(
+                key,
+                0,
+                numItems - 1
+            );
             return data;
         } catch (ex) {
             this._logger.Error("Failed to fetch data from {0}", key);
