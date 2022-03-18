@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import ResponseStatus from "../../types/ResponseStatus";
 
 async function get(
     host: string,
