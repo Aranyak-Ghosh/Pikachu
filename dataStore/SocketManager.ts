@@ -12,13 +12,14 @@ class SocketManager {
     private constructor() {}
 
     public static Initialize(): SocketManager {
-        const socketManager = new SocketManager();
+        if (this._instance == null || this._instance == undefined) {
+            const socketManager = new SocketManager();
 
-        socketManager._sockets = {};
+            socketManager._sockets = {};
 
-        SocketManager._instance = socketManager;
-
-        return socketManager;
+            SocketManager._instance = socketManager;
+            return socketManager;
+        } else return this._instance;
     }
 
     public static GetInstance(): SocketManager {

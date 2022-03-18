@@ -17,22 +17,26 @@ class RedisClient {
     private TTL: number;
 
     public static Initialize(options?: RedisModule.RedisOptions): RedisClient {
-        RedisClient._instance = new RedisClient();
+        if (this._instance == null || this._instance == undefined) {
+            this._instance = new RedisClient();
 
-        RedisClient._instance._logger = ConsoleLogger.GetInstance();
+            this._instance._logger = ConsoleLogger.GetInstance();
 
-        RedisClient._instance.callbacks = {};
+            this._instance.callbacks = {};
 
-        RedisClient._instance.TTL = 86400;
+            this._instance.TTL = 86400;
 
-        if (options == null || options == undefined) {
-            RedisClient._instance._client = new RedisModule();
-            RedisClient._instance._subscriberClient = new RedisModule();
-        } else {
-            RedisClient._instance._subscriberClient = new RedisModule(options);
-            RedisClient._instance._client = new RedisModule(options);
+            if (options == null || options == undefined) {
+                this._instance._client = new RedisModule();
+                this._instance._subscriberClient = new RedisModule();
+            } else {
+                this._instance._subscriberClient = new RedisModule(
+                    options
+                );
+                this._instance._client = new RedisModule(options);
+            }
         }
-        return RedisClient._instance;
+        return this._instance;
     }
 
     public static GetInstance(): RedisClient {
@@ -241,11 +245,7 @@ class RedisClient {
     ): Promise<Array<string>> {
         // this._logger.Info("Fetching {0} items from {1}", numItems, key);
         try {
-            let data = await this._client.zrangebyscore(
-                key,
-                0,
-                numItems - 1
-            );
+            let data = await this._client.zrangebyscore(key, 0, numItems - 1);
             return data;
         } catch (ex) {
             this._logger.Error("Failed to fetch data from {0}", key);
