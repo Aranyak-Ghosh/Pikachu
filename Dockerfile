@@ -12,4 +12,4 @@ RUN yarn
 
 EXPOSE 8000
 
-CMD ["npm","run", "serve"]
+CMD ["yarn", "serve"]
