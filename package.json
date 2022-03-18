@@ -12,7 +12,7 @@
         "dev": "tsc -w | nodemon dist/index.js ",
         "build": "tsc -p .",
         "serve": "tsc -p . && node dist/index.js",
-        "nm": "nodemon --watch './**/*.ts' --exec 'yarn serve'"
+        "nm": "nodemon --watch './**/*.ts' --exec 'npm run serve'"
     },
     "devDependencies": {
         "@types/jest": "^27.4.1",
