@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import ResponseStatus from "../../types/ResponseStatus";
 
 async function get(
@@ -16,7 +16,7 @@ async function get(
     try {
         var response = await client.get(path);
 
-        if (response.status == ResponseStatus.OK) {
+        if (isSuccessfulResponse(response)) {
             return response.data;
         } else {
             throw new Error(response.data);
@@ -37,11 +37,7 @@ async function post(
     try {
         var response = await client.post(path, body);
 
-        if (
-            response.status == ResponseStatus.OK ||
-            response.status == ResponseStatus.CREATED ||
-            response.status == ResponseStatus.ACCEPTED
-        ) {
+        if (isSuccessfulResponse(response)) {
             return response.data;
         } else {
             throw new Error(response.data);
@@ -62,11 +58,7 @@ async function put(
     try {
         var response = await client.put(path, body);
 
-        if (
-            response.status == ResponseStatus.OK ||
-            response.status == ResponseStatus.NO_CONTENT ||
-            response.status == ResponseStatus.ACCEPTED
-        ) {
+        if (isSuccessfulResponse(response)) {
             return response.data;
         } else {
             throw new Error(response.data);
@@ -86,11 +78,7 @@ async function del(
     try {
         var response = await client.delete(path);
 
-        if (
-            response.status == ResponseStatus.OK ||
-            response.status == ResponseStatus.NO_CONTENT ||
-            response.status == ResponseStatus.ACCEPTED
-        ) {
+        if (isSuccessfulResponse(response)) {
             return response.data;
         } else {
             throw new Error(response.data);
@@ -111,11 +99,7 @@ async function patch(
     try {
         var response = await client.patch(path, body);
 
-        if (
-            response.status == ResponseStatus.OK ||
-            response.status == ResponseStatus.NO_CONTENT ||
-            response.status == ResponseStatus.ACCEPTED
-        ) {
+        if (isSuccessfulResponse(response)) {
             return response.data;
         } else {
             throw new Error(response.data);
@@ -153,6 +137,10 @@ function generateQueryString(params: any): string {
         }
     }
     return queryString;
+}
+
+function isSuccessfulResponse(response: AxiosResponse<any, any>): boolean {
+    return response.status >= 200 && response.status < 300;
 }
 
 export default { get, post, put, patch, del };
