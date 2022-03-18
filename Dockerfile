@@ -1,4 +1,4 @@
-FROM node:12.15.0-slim
+FROM node:17.1.0-slim
 
 LABEL maintainer="Jonathan Gros-Dubois"
 LABEL version="16.0.1"
