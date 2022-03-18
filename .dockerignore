@@ -1,3 +1,5 @@
 node_modules/
 package-lock.json
 socketcluster-k8s.json
+*.tests.ts
+*.test.ts

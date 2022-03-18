@@ -1,4 +1,4 @@
-import TokenParser from "../tokenParser";
+import TokenParser from "../TokenParser";
 
 describe("TokenParserTests", () => {
     it("should parse token claims", () => {
